@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: gz_raw_data
+    description: greenweez raw data
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        description: green weez purchases of items with revenue
+      - name: product
+        identifier: raw_gz_product
+        description: green weez table of product ids with prices
+      - name: ship
+        identifier: raw_gz_ship
+        description: green weez table of shipping fees for each order
