@@ -3,7 +3,11 @@
 --FIRST CTE: Creating purchase_cost column
 WITH purchase_cost_calc AS(
     SELECT
-        sales.products_id 
+        sales.date_date
+        ,sales.products_id 
+        ,sales.orders_id
+        ,sales.revenue
+        ,sales.quantity
        ,sales.quantity * product.purchase_price AS purchase_cost
     FROM {{ref('stg_raw__sales')}} AS sales
     JOIN {{ref('stg_raw__product')}} AS product
@@ -12,7 +16,11 @@ WITH purchase_cost_calc AS(
 --SECOND CTE: Creating margin column with purchase_cost from first CTE
 , margin_calc AS (
     SELECT
-        sales.products_id 
+        sales.date_date
+        ,sales.orders_id
+        ,sales.products_id 
+        ,sales.revenue
+        ,sales.quantity
         ,pc.purchase_cost
        ,sales.revenue - purchase_cost AS margin
     FROM {{ref('stg_raw__sales')}} AS sales
