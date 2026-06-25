@@ -1,6 +1,6 @@
 --Calculating margin per product by JOINing 'stg_raw__sales' and 'stg_raw__product' models
 
---FIRST CTE: Creating purchase_cost column
+--FIRST CTE: Creating purchase_cost column and adding all necessary columns
 WITH purchase_cost_calc AS(
     SELECT
         sales.date_date
