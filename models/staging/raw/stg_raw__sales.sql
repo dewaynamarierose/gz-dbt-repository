@@ -1,4 +1,5 @@
 --CTE used to create model from sales (orginally raw_gz_sales)
+
 with 
 
 source as (

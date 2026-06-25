@@ -8,9 +8,45 @@ sources:
       - name: sales
         identifier: raw_gz_sales
         description: green weez purchases of items with revenue
+        columns:
+          - name: date_date
+            description: date of purchase
+          - name: orders_id
+            description: id of order created
+          - name: pdt_id
+            description: id of product that was purchased
+          - name: revenue
+            description: amount made from purchase
+          - name: quanity
+            description: amount of products purchased
+        tests:
+          - unique:
+              column_name: "(orders_id || '-' || pdt_id)"
       - name: product
         identifier: raw_gz_product
-        description: green weez table of product ids with prices
+        description: green weez table of each product id with their prices
+        columns:
+          - name: products_id
+            description: id of greenweez product
+            tests:
+              - unique
+              - not_null
+          - name: purchSE_PRICE
+            description: purchase price of greenweez product
       - name: ship
         identifier: raw_gz_ship
         description: green weez table of shipping fees for each order
+        columns:
+          - name: orders_id
+            description: orders id 
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: price customer pays to get the order delivered 
+          - name: shipping_fee_1
+            description: price customer pays to get the order delivered (duplicate column of shipping_fee)
+          - name: logCost
+            description: the natural log of the cost amount to normalize large values for better analysis
+          - name: ship_cost
+            description: the cost to greenweez to deliver order
