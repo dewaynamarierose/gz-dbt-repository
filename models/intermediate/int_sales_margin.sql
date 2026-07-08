@@ -8,6 +8,7 @@ WITH purchase_cost_calc AS(
         ,sales.orders_id
         ,sales.revenue
         ,sales.quantity
+        ,product.purchase_price 
        ,sales.quantity * product.purchase_price AS purchase_cost
     FROM {{ref('stg_raw__sales')}} AS sales
     JOIN {{ref('stg_raw__product')}} AS product
@@ -22,6 +23,7 @@ WITH purchase_cost_calc AS(
         ,sales.revenue
         ,sales.quantity
         ,pc.purchase_cost
+        ,pc.purchase_price
        ,sales.revenue - purchase_cost AS margin
     FROM {{ref('stg_raw__sales')}} AS sales
     JOIN purchase_cost_calc AS pc
