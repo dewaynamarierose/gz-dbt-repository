@@ -1,0 +1,170 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: gz_raw_data
+    description: greenweez raw data
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        description: green weez purchases of items with revenue
+        columns:
+          - name: date_date
+            description: date of purchase
+          - name: orders_id
+            description: id of order created
+          - name: pdt_id
+            description: id of product that was purchased
+          - name: revenue
+            description: amount made from purchase
+          - name: quanity
+            description: amount of products purchased
+        tests:
+          - unique:
+              column_name: "(orders_id || '-' || pdt_id)"
+      - name: product
+        identifier: raw_gz_product
+        description: green weez table of each product id with their prices
+        columns:
+          - name: products_id
+            description: id of greenweez product
+            tests:
+              - unique
+              - not_null
+          - name: purchSE_PRICE
+            description: purchase price of greenweez product
+      - name: ship
+        identifier: raw_gz_ship
+        description: green weez table of shipping fees for each order
+        columns:
+          - name: orders_id
+            description: orders id
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: price customer pays to get the order delivered
+          - name: shipping_fee_1
+            description: price customer pays to get the order delivered (duplicate column of shipping_fee)
+          - name: logCost
+            description: the natural log of the cost amount to normalize large values for better analysis
+          - name: ship_cost
+            description: the cost to greenweez to deliver order
+models:
+  - name: int_sales_margin
+    description: sales and margin at order and product level
+    columns:
+      - name: date_date
+        description: date of order
+        tests:
+          - not_null
+      - name: orders_id
+        description: order id
+        tests:
+          - not_null
+      - name: products_id
+        description: product id
+        tests:
+          - not_null
+      - name: order_product_id
+        description: concatination of order and product id to create PRIMARY KEY 
+        tests:
+          - not_null
+          - unique
+      - name: revenue
+        description: revenue generated for that order
+        tests:
+          - not_null
+      - name: quantity
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: total purchase cost per line, price times quanity 
+        tests:
+          - not_null
+      - name: purchase_price
+        description: cost per unit of product
+        tests:
+          - not_null
+      - name: margin
+        description: turnover after purchase costs
+        tests:
+          - not_null
+  - name: int_orders_margin
+    description: sales and margin summary aggregated per order
+    columns:
+      - name: orders_id
+        description: order id
+        tests:
+        - not_null
+      - name: date_order_id
+        description: concatination of date and order id to create PRIMARY KEY 
+        tests:
+        - not_null
+        - unique
+      - name: revenue
+        description: total sales amount summed
+        tests:
+        - not_null
+      - name: quantity
+        description: total of items purchased summed in order
+        tests:
+        - not_null
+      - name: purchase_cost
+        description: total purchase cost per order summed across all products
+        tests:
+        - not_null
+      - name: margin
+        description: turnover summed after purchase costs
+        tests:
+        - not_null
+  - name: int_orders_operational
+    description: order margin after shipping and logistics costs
+    columns:
+      - name: date_date
+        description: date of order
+        tests:
+          - not_null
+      - name: orders_id
+        description: order id
+        tests:
+          - not_null
+      - name: date_order_id
+        description: concatination of date and order id to create PRIMARY KEY
+        tests:
+        - not_null
+        - unique
+      - name: quantity
+        description: total of items purchased
+        tests:
+          - not_null
+      - name: revenue
+        description: total sales
+        tests:
+          - not_null
+      - name: margin
+        description: revenue after purchase costs
+        tests:
+        - not_null 
+      - name: purchase_cost
+        description: total purchase cost per order
+        tests:
+          - not_null
+      - name: ship_cost
+        description: cost to ship order
+        tests:
+        - not_null
+      - name: log_cost
+        description: logistics cost for order
+        tests:
+          - not_null
+      - name: shipping_fee
+        description: fee to ship the order
+        tests:
+          - not_null
+      - name: operational_margin
+        description: turnover after shipping, logistics and ship costs
+        tests:
+          - not_null
+          
+          
