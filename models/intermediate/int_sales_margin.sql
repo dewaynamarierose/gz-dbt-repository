@@ -1,9 +1,7 @@
---Calculating margin per product by JOINing 'stg_raw__sales' and 'stg_raw__product' models
 
---FIRST CTE: Creating purchase_cost column and adding all necessary columns
 WITH purchase_cost_calc AS(
     SELECT
-        sales.date_date
+         sales.date_date
         ,sales.products_id 
         ,sales.orders_id
         ,sales.revenue
@@ -17,17 +15,16 @@ WITH purchase_cost_calc AS(
 --SECOND CTE: Creating margin column with purchase_cost from first CTE
 , margin_calc AS (
     SELECT
-        sales.date_date
-        ,sales.orders_id
-        ,sales.products_id 
-        ,sales.revenue
-        ,sales.quantity
-        ,pc.purchase_cost
-        ,pc.purchase_price
-       ,sales.revenue - purchase_cost AS margin
-    FROM {{ref('stg_raw__sales')}} AS sales
-    JOIN purchase_cost_calc AS pc
-        ON sales.products_id = pc.products_id
+       date_date
+       ,orders_id
+       ,products_id
+       ,CONCAT(orders_id,'_',products_id) AS order_product_id --PRIMARY KEY
+       ,revenue
+       ,quantity
+       ,purchase_cost
+       ,purchase_price
+       ,ROUND((revenue - purchase_cost),2) AS margin
+    FROM purchase_cost_calc
 )
 SELECT *
 FROM margin_calc
