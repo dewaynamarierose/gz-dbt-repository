@@ -24,6 +24,7 @@ WITH purchase_cost_calc AS(
        ,purchase_cost
        ,purchase_price
        ,ROUND((revenue - purchase_cost),2) AS margin
+       ,{{ gz_dbt_repository.margin_percent('revenue', 'purchase_cost', 2) }} AS margin_percent
     FROM purchase_cost_calc
 )
 SELECT *
